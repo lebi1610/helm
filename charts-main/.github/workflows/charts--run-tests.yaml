@@ -1,0 +1,51 @@
+name: "Charts | Run Tests"
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "charts/**"
+
+jobs:
+  lint-and-install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.6.1
+
+      - name: Install chart-testing
+        uses: helm/chart-testing-action@v2.1.0
+        with:
+          version: v3.4.0
+
+      - name: List Changed Charts (chart-testing)
+        id: list-changed
+        run: |
+          CHANGED=$(ct list-changed --config ct-config.yaml)
+          if [[ -n "$CHANGED" ]]; then
+            echo "::set-output name=CHANGED::true"
+          fi
+
+      - name: Create kind Cluster
+        uses: helm/kind-action@v1.1.0
+        if: steps.list-changed.outputs.CHANGED == 'true'
+        timeout-minutes: 5
+        with:
+          version: v0.11.1
+          wait: 300s
+
+      - name: Lint Charts (chart-testing)
+        if: steps.list-changed.outputs.CHANGED == 'true'
+        run: ct lint --config ct-config.yaml --check-version-increment=false
+
+      - name: Install Charts (chart-testing)
+        if: steps.list-changed.outputs.CHANGED == 'true'
+        run: ct install --config ct-config.yaml
