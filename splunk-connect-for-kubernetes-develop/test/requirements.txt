@@ -1,0 +1,5 @@
+pytest
+requests
+kubernetes
+pytest-xdist
+pytest-expect
