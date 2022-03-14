@@ -304,7 +304,7 @@ global:
     hec:
       host:
       port: 8088
-      token:
+      token: 11111111-2222-3333-4444-555555555555
       protocol: https
       indexName:
       insecureSSL: false
