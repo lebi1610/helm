@@ -890,9 +890,9 @@ splunk-kubernetes-metrics:
       # hostname/ip of HEC, REQUIRED.
       host:
       # port to HEC, OPTIONAL. Default value: 8088
-      port:
+      port: 
       # the HEC token, REQUIRED.
-      token:
+      token: 11111111-2222-3333-4444-555555555555
       # protocol has two options: "http" and "https". Default value: "https"
       # For self signed certificate leave this field blank
       protocol:
