@@ -50,7 +50,8 @@ splunk:
     # port to HEC, OPTIONAL. Default value: 8088
     port:
     # the HEC token, REQUIRED.
-    token: 11111111-2222-3333-4444-555555555555
+    token: {{- with or .Values.splunk.hec.token .Values.global.splunk.hec.token }}
+           {{ . | b64enc }}
     # protocol has two options: "http" and "https". Default value: "https"
     protocol:
     # Instead of providing host, port, and protocol, you can provide full url for splunk. For example: https://mydomain.com:8088/apps/splunk
